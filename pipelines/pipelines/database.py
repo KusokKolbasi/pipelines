@@ -14,12 +14,15 @@ def create(table, query, connection='database.db'):
     database.close()
     
 
-def save(file, table, connection='database.db'):
-    with open(f"{file}.csv", "w", newline='') as file:
+def save(file, table, connection='db.db'):
+    with open(f"{file}.csv", "a+") as file:
         cursor = sqlite3.connect(connection).cursor()
         writer = csv.writer(file)
-        writer.writerow(['id', 'name', 'url', 'url_domain'])
         data = cursor.execute("SELECT * FROM " + table)
+        names = []
+        for column in data.description:
+            names.append(column[0])
+        writer.writerow(names)
         writer.writerows(data)
 
 
